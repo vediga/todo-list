@@ -4,7 +4,42 @@ info:
   version: "1.0.0"
   title: "Todolist"
 paths:
-  /item:
+
+  /items:
+    get:
+      description: "Gets todo `Item` list.\nOptional query param of **pageSize** determines\n\
+        page size and **pageNo** determines which page to retrieve."
+      operationId: "itemsGET"
+      parameters:
+      - name: "pageSize"
+        in: "query"
+        description: "Page size of response, defaults to 10"
+        required: false
+        type: "number"
+      - name: "pageNo"
+        in: "query"
+        description: "Page number to return, defaults to 1"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "object"
+            properties:
+              items:
+                type: "array"
+                title: "ArrayOfItems"
+                items:
+                  $ref: "#/definitions/Item"
+              meta:
+                type: "object"
+                properties:
+                  pageSize:
+                    type: "number"
+                  numItems:
+                    type: "number"
+      x-swagger-router-controller: "Default"
     post:
       description: "Creates a new `Item` object.\n"
       parameters:
@@ -24,79 +59,44 @@ paths:
           schema:
             $ref: "#/definitions/Message"
       x-swagger-router-controller: "Default"
-
-  /item/{id}:
-    put:
-      description: "Updates an `Item` object for the given id.\n"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "id of item"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Successfully updated item"
-          schema:
-            $ref: "#/definitions/Message"
-        default:
-          description: "Failed to update item"
-          schema:
-            $ref: "#/definitions/Message"
-      x-swagger-router-controller: "Default"
-    delete:
-      description: "Deletes an `Item` object for the given id.\n"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "id of item"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Successfully deleted item"
-          schema:
-            $ref: "#/definitions/Message"
-        default:
-          description: "Failed to delete item"
-          schema:
-            $ref: "#/definitions/Message"
-      x-swagger-router-controller: "Default"
-
-  /items:
-    get:
-      description: "Gets `Item` objects.\nOptional query param of **size** determines\n\
-        size of returned array\n"
-      operationId: "itemsGET"
-      parameters:
-      - name: "size"
-        in: "query"
-        description: "Size of array, defaults to 10"
-        required: false
-        type: "number"
-      responses:
-        200:
-          description: "Successful response"
-          schema:
-            type: "object"
-            properties:
-              items:
-                type: "array"
-                title: "ArrayOfItems"
-                items:
-                  $ref: "#/definitions/Item"
-              meta:
-                type: "object"
-                properties:
-                  pageSize:
-                    type: "number"
-                  numPages:
-                    type: "number"
-                  nextPage:
-                    type: "number"
-                  prevPage:
-                    type: "number"
-      x-swagger-router-controller: "Default"
+  
+  /items/{id}:
+      put:
+        description: "Updates an `Item` object for the given id.\n"
+        parameters:
+        - name: "id"
+          in: "path"
+          description: "id of item"
+          required: true
+          type: "string"
+        responses:
+          200:
+            description: "Successfully updated item"
+            schema:
+              $ref: "#/definitions/Message"
+          default:
+            description: "Failed to update item"
+            schema:
+              $ref: "#/definitions/Message"
+        x-swagger-router-controller: "Default"
+      delete:
+        description: "Deletes an `Item` object for the given id.\n"
+        parameters:
+        - name: "id"
+          in: "path"
+          description: "id of item"
+          required: true
+          type: "string"
+        responses:
+          200:
+            description: "Successfully deleted item"
+            schema:
+              $ref: "#/definitions/Message"
+          default:
+            description: "Failed to delete item"
+            schema:
+              $ref: "#/definitions/Message"
+        x-swagger-router-controller: "Default"
 definitions:
   Item:
     type: "object"

@@ -18,22 +18,26 @@ module.exports = function (app) {
    // development error handler
    // will print stacktrace
    if (app.get('env') === 'development') {
-     app.use(function(err, req, res, next) {
-       res.status(err.status || 500);
-       res.render('error', {
-         message: err.message,
-         error: err
-       });
-     });
+      app.use(function(err, req, res, next) {
+         res.status(err.status || 500);
+         // api requests respond with json
+         if (req.path.startsWith('/api')) {
+            res.json({ status: 'FAIL', message: err.message });
+         } else {
+            res.render('error', { message: err.message, error: err });
+         }
+      });
    }
 
    // production error handler
    // no stacktraces leaked to user
    app.use(function(err, req, res, next) {
-     res.status(err.status || 500);
-     res.render('error', {
-       message: err.message,
-       error: {}
-     });
+      res.status(err.status || 500);
+      // api requests respond with json
+      if (req.path.startsWith('/api')) {
+         res.json({ status: 'FAIL', message: err.message });
+      } else {
+         res.render('error', { message: err.message, error: {} });
+      }
    });
 }

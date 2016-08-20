@@ -72,7 +72,20 @@ router.put('/:id', function(req, res, next) {
  *  status {string} - 'SUCCEEDED' or 'FAILED'
  */
 router.delete('/:id', function(req, res, next) {
-   res.send('Deletes an Item object for the given id.');
+   Item.remove({ _id : req.params.id }, function(err, removed) {
+      var message; // {String}
+      var status; // {String}
+
+      if (err) {
+         status = 'FAIL';
+         message = 'Failed to delete the item';
+      }  else {
+         status = 'SUCCESS';
+         message = 'Successfully deleted Todo List item.';
+      }
+
+      res.json({ status: status, message: message });
+   });
 });
 
 module.exports = router;

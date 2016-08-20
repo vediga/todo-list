@@ -60,7 +60,20 @@ router.post('/', function(req, res, next) {
  *  status {string} - 'SUCCEEDED' or 'FAILED'
  */
 router.put('/:id', function(req, res, next) {
-   res.send('Updates an Item object for the given id.');
+   Item.update({ _id: req.params.id }, req.body, null, function (err, raw) {
+      var message; // {String}
+      var status; // {String}
+
+      if (err) {
+         message = 'Failed to update the item.';
+         status = 'FAIL';
+      }  else {
+         message = 'Successfully updated Todo List item.';
+         status = 'SUCCESS';
+      }
+
+      res.json({ status: status, message: message });
+   });
 });
 
 /**
@@ -77,11 +90,11 @@ router.delete('/:id', function(req, res, next) {
       var status; // {String}
 
       if (err) {
+         message = 'Failed to delete the item.';
          status = 'FAIL';
-         message = 'Failed to delete the item';
       }  else {
-         status = 'SUCCESS';
          message = 'Successfully deleted Todo List item.';
+         status = 'SUCCESS';
       }
 
       res.json({ status: status, message: message });

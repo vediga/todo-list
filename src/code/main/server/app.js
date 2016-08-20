@@ -4,10 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var mongoose = require('mongoose');
 var globals = require('./shared/globals');
 
 var app = express();
+
+// database
+mongoose.connect('mongodb://localhost/todo_list', function (error) {
+   !error || console.log("Failed to connect to database", error);
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, globals.publicDir + 'views'));

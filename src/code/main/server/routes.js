@@ -35,7 +35,7 @@ module.exports = function (app) {
       res.status(err.status || 500);
       // api requests respond with json
       if (req.path.startsWith('/api')) {
-         res.json({ status: 'FAIL', message: err.message });
+         res.json({ status: 'FAIL', message: '' });
       } else {
          res.render('error', { message: err.message, error: {} });
       }

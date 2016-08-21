@@ -13,7 +13,29 @@ var Item = require('./schema/item');
  *  meta {object} - meta data about the items
  */
 router.get('/', function(req, res, next) {
-   res.send('returns array of todo items corresponding to pageNo and pageSize');
+   var pageSize = req.query.pageSize || 10;
+   var pageNo = req.query.pageNo || 1;
+
+   Item.find({}, function (err, records) {
+      var data = {}; // {Object}
+      var numPages = records && Math.ceil(records.length/pageSize);
+
+      if (err) {
+         data.message = 'Failed to retrieve Todo List items.';
+         data.status = 'FAIL';
+      } else if (pageNo <= 0 || pageNo > numPages) {
+         data.message = 'Invalid page number.';
+         data.status = 'FAIL';
+         data.meta = { totalPages: numPages, pageSize: pageSize };
+      } else {
+         data.message = 'Successfully retrieved Todo List items.';
+         data.status = 'SUCCESS';
+         data.items = records.splice((pageNo - 1) * pageSize, pageSize);
+         data.meta = { totalPages: numPages, currentPage: parseInt(pageNo) , pageSize: pageSize };
+      }
+
+      res.json(data);
+   });
 });
 
 /**
